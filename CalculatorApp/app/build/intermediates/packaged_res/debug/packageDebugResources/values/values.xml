@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="white">#FFFFFF</color>
+    <string name="app_name">Calculator</string>
+    <string name="btn_0">0</string>
+    <string name="btn_1">1</string>
+    <string name="btn_2">2</string>
+    <string name="btn_3">3</string>
+    <string name="btn_4">4</string>
+    <string name="btn_5">5</string>
+    <string name="btn_6">6</string>
+    <string name="btn_7">7</string>
+    <string name="btn_8">8</string>
+    <string name="btn_9">9</string>
+    <string name="btn_clear">C</string>
+    <string name="btn_divide">/</string>
+    <string name="btn_dot">.</string>
+    <string name="btn_equals">=</string>
+    <string name="btn_minus">-</string>
+    <string name="btn_multiply">X</string>
+    <string name="btn_percent">%</string>
+    <string name="btn_plus">+</string>
+    <string name="btn_sign">+/-</string>
+    <string name="default_display">0</string>
+    <style name="CalculatorButtonStyle">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+    <style name="Theme.CalculatorApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+</resources>
