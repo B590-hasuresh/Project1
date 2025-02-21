@@ -17,17 +17,30 @@ import kotlin.math.tan
  * - Performs left-to-right "iPhone style" calculations
  * - Handles division by zero gracefully
  * - Prevents multiple decimals in the same number
+ * - Supports scientific functions in landscape mode
  */
 class MainActivity : AppCompatActivity() {
 
-    // The display TextView for showing input and results
+    /** The display TextView for showing input and results */
     private lateinit var calcDisplay: TextView
 
-    // Variables for storing the first value, the current operation, and whether a new number is starting
+    /** Stores the first value in a two-operand calculation */
     private var firstValue: Double = 0.0
+
+    /** Stores the current operation (+, -, *, /) */
     private var operation: String? = null
-    private var isNewOperation: Boolean = true  // When true, next digit replaces display
+
+    /** When true, next digit replaces display instead of appending */
+    private var isNewOperation: Boolean = true
+
+    /** Tag for logging */
     private val TAG = "CalculatorApp"
+
+    /**
+     * Initializes the activity, sets up view binding and click listeners.
+     * Creates listeners for numeric, operation, and function buttons.
+     * @param savedInstanceState Bundle containing the saved state
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -62,6 +75,7 @@ class MainActivity : AppCompatActivity() {
             val button = view as Button
             numberClicked(button.text.toString())
         }
+
         // Assign to each numeric/dot button
         btn0.setOnClickListener(numberClickListener)
         btn1.setOnClickListener(numberClickListener)
@@ -87,8 +101,11 @@ class MainActivity : AppCompatActivity() {
         btnSign.setOnClickListener    { toggleSign() }
         btnPercent.setOnClickListener { percent() }
     }
-// Add to MainActivity.kt after the onCreate() method
 
+    /**
+     * Handles configuration changes, particularly rotation between portrait and landscape
+     * @param newConfig The new device configuration
+     */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
@@ -98,6 +115,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initializes the scientific calculator buttons that are only available in landscape mode.
+     * Sets up click listeners for trigonometric (sin, cos, tan) and logarithmic (log10, ln) functions.
+     * Each button is null-checked since they only exist in landscape layout.
+     *
+     * The function:
+     * - Finds scientific operation buttons from layout
+     * - Sets up click listeners with null safety checks
+     * - Logs button press events for debugging
+     *
+     * Note: This is called both during onCreate and onConfigurationChanged (landscape)
+     */
     private fun initializeScientificButtons() {
         Log.d(TAG, "scientific buttons initialized")
         // Find the scientific buttons which only exist in landscape mode
@@ -134,6 +163,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Performs scientific calculations on the current display value.
+     * Handles domain errors by displaying "Error" for invalid inputs.
+     *
+     * @param op The operation to perform: "sin", "cos", "tan", "log10", or "ln"
+     *
+     * Notes:
+     * - Trigonometric functions expect input in degrees and convert to radians
+     * - Returns "Error" for undefined results (NaN) or infinity
+     * - Sets isNewOperation to true after calculation
+     * - Skips calculation if display already shows "Error"
+     */
     private fun scientificOperation(op: String) {
         if (calcDisplay.text.toString() == "Error") {
             return // Can't perform operations on error state
@@ -158,10 +199,15 @@ class MainActivity : AppCompatActivity() {
 
         isNewOperation = true
     }
+
     /**
      * Called when any digit or dot is pressed.
-     * - Prevents multiple dots in the same number.
-     * - If we're starting fresh or display is "0", we clear the display first.
+     * @param digit The digit or dot that was pressed
+     *
+     * Notes:
+     * - Prevents multiple dots in the same number
+     * - If we're starting fresh or display is "0", we clear the display first
+     * - Logs each button press for debugging
      */
     private fun numberClicked(digit: String) {
         Log.d(TAG, "Button pressed: $digit")
@@ -182,9 +228,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * When an operator (+, -, *, /) is pressed:
-     * - If not a new operation, do partial calculation first (chain mode).
-     * - Store the current operation, remember firstValue, and set isNewOperation true.
+     * Handles operation button clicks (+, -, *, /).
+     * @param op The operation symbol that was clicked
+     *
+     * Notes:
+     * - If not a new operation, performs pending calculation first (chain mode)
+     * - Stores the operation and first value for next calculation
+     * - Sets isNewOperation flag to prepare for next number input
+     * - Logs operation for debugging
      */
     private fun operationClicked(op: String) {
         Log.d(TAG, "Operation pressed: $op")
@@ -202,8 +253,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Perform the pending operation with firstValue and current display.
-     * Handles divide-by-zero by showing "Error".
+     * Performs the pending operation with firstValue and current display.
+     *
+     * Notes:
+     * - Handles divide-by-zero by showing "Error"
+     * - Updates display with result if not error
+     * - Resets operation after calculation
+     * - Logs operation for debugging
      */
     private fun equals() {
         Log.d(TAG, "Equals pressed")
@@ -233,7 +289,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Clears the display and internal states to defaults.
+     * Clears the display and resets all calculator states to defaults.
+     * Sets display to "0" and resets all operation variables.
      */
     private fun clearAll() {
         Log.d(TAG, "Clear pressed")
@@ -244,7 +301,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Toggles the sign of the currently displayed number (e.g. 5 -> -5).
+     * Toggles the sign of the currently displayed number.
+     * Multiplies current display value by -1.
+     * Skips operation if display shows "Error".
      */
     private fun toggleSign() {
         Log.d(TAG, "Sign toggle pressed")
@@ -257,6 +316,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Converts the displayed number to a percentage by dividing by 100.
+     * Skips operation if display shows "Error".
      */
     private fun percent() {
         Log.d(TAG, "Percent pressed")
@@ -266,7 +326,11 @@ class MainActivity : AppCompatActivity() {
         val currentValue = calcDisplay.text.toString().toDoubleOrNull() ?: 0.0
         calcDisplay.text = (currentValue / 100).toString()
     }
-    // Add these methods to MainActivity.kt
+
+    /**
+     * Saves the calculator's state before configuration changes.
+     * @param outState Bundle to store the state
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -277,6 +341,10 @@ class MainActivity : AppCompatActivity() {
         outState.putBoolean("IS_NEW_OPERATION", isNewOperation)
     }
 
+    /**
+     * Restores the calculator's state after configuration changes.
+     * @param savedInstanceState Bundle containing the saved state
+     */
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
@@ -286,5 +354,4 @@ class MainActivity : AppCompatActivity() {
         operation = savedInstanceState.getString("OPERATION", null)
         isNewOperation = savedInstanceState.getBoolean("IS_NEW_OPERATION", true)
     }
-
 }

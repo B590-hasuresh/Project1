@@ -1,47 +1,49 @@
-# Android CalculatorApp
+# Android Calculator App
 
-This is a simple **calculator app** built for Android using **Kotlin and XML**.  
-It mimics the behavior of the default iOS calculator, allowing users to perform basic arithmetic operations.
+A robust calculator application for Android that provides basic arithmetic operations with persistence across orientation changes. The app features both portrait and landscape modes with additional scientific functions in landscape orientation.
 
 ## Functionality 
 
 The following **required** functionality is completed:
 
-* User sees a calculator layout with buttons for digits, operations, and special functions.
-* User can perform addition, subtraction, multiplication, and division.
-* User can clear the display using the `C` button.
-* User can change the sign of a number using the `+/-` button.
-* User can calculate percentages using the `%` button.
-* User sees live updates of their input in the top `TextView`.
-* User can enter decimal numbers using the `.` button.
-* User can chain multiple operations without pressing `=` after every step.
+* [x] Basic arithmetic operations (addition, subtraction, multiplication, division)
+* [x] Clear button (C) to reset calculations
+* [x] Positive/negative number toggle (+/-)
+* [x] Percentage calculation (%)
+* [x] Persistent calculation state across orientation changes
+* [x] Button click logging using LogCat
+* [x] Custom calculator app icon
+* [x] Landscape mode with additional scientific functions
 
-The following extensions are implemented:
+The following **extensions** are implemented:
 
-* Handles division by zero by showing `Error` or `Infinity`.
-* Prevents multiple leading zeros (e.g., entering `0005` displays as `5`).
-* Supports real-time updates of calculations while entering numbers.
+* Enhanced UI with consistent 2dp margins between components
+* Bold text display with 80sp size for results
+* Double-width zero button for improved usability
+* Null safety checks for landscape-specific buttons
+* iPhone-style calculation flow:
+  - Displays previous number until new number entry begins
+  - Immediate calculation on consecutive operation presses
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='CalcApp.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' />
+<img src='walkthrough.gif' title='Video Walkthrough' width='50%' alt='Video Walkthrough' />
+
 
 ## Notes
 
-### Challenges Faced
-1. UI Layout Issues:**
-   - `GridLayout` was initially not expanding correctly, causing buttons to be hidden.  
-   - Fixed by ensuring correct constraints and layout percentages.  
+Challenges encountered while building the app:
 
-2. Handling Edge Cases: 
-   - Division by zero needed proper handling to prevent app crashes.  
-   - Input validation was necessary to prevent multiple decimal points.  
+* Implementing state persistence across orientation changes required careful handling of lifecycle methods
+* Managing different layouts for portrait and landscape modes while maintaining consistent functionality
+* Ensuring proper null checking for landscape-specific buttons to prevent crashes
+* Implementing iPhone-style calculation flow required careful state management
 
 ## License
 
-    Copyright 2024 [Abirami Saravanan, Harish Suresh]
+    Copyright 2025 Harish Suresh
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
